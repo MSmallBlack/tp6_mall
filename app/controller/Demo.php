@@ -15,7 +15,19 @@ class Demo extends BaseController
 {
     public function show()
     {
-        return "abba";
+        $array = [
+            'id' => 1,
+            'name' => 'gogochen'
+        ];
+        return json($array, 201);
     }
+
+    public function request()
+    {
+        //获取request
+//        dump($this->request->get());
+        dump($this->request->param('abc',1,'intval'));
+    }
+
 
 }

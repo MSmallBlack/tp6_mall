@@ -91,4 +91,21 @@ abstract class BaseController
         return $v->failException(true)->check($data);
     }
 
+
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement __call() method.
+//        dump($name);
+//        dump($arguments);
+        //逻辑：如果我们的模块是API模块，需要输出api格式
+        //如果是模板引擎的方式，需要输出一个特定的页面
+//        $result = [
+//            'status' => 0,
+//            'message'=> '找不到该方法',
+//            'result' => null
+//        ];
+//        return json($result,400);
+        return show(config('status.action_not_found'),"找不到该{$name}方法",null,400);
+    }
+
 }
