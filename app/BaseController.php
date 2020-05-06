@@ -91,7 +91,12 @@ abstract class BaseController
         return $v->failException(true)->check($data);
     }
 
-
+    /**
+     * 调用__call方法来过滤没有的方法
+     * @param $name
+     * @param $arguments
+     * @return \think\response\Json
+     */
     public function __call($name, $arguments)
     {
         // TODO: Implement __call() method.

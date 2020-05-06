@@ -8,7 +8,7 @@
 
 namespace app\controller;
 
-
+//use think\facade\Request;
 use app\Request;
 
 class Learn
@@ -17,8 +17,8 @@ class Learn
     {
         //获取request
 //        dump($request->param('abc'));
-//        dump(input('abc'));
+        dump(input('abc'));
 //        dump(\request()->param('abc'));
-        dump(think\facade\Request::param('abc'));
+//        dump(Request::param('abc'));
     }
 }
