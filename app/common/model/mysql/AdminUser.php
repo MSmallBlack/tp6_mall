@@ -9,6 +9,9 @@
 namespace app\common\model\mysql;
 
 
+use think\db\exception\DataNotFoundException;
+use think\db\exception\DbException;
+use think\db\exception\ModelNotFoundException;
 use think\Model;
 
 class AdminUser extends Model
@@ -17,9 +20,9 @@ class AdminUser extends Model
      * 根据用户名获取登录用户信息
      * @param $username
      * @return array|bool|Model|null
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public function getAdminUserByUsername($username)
     {
