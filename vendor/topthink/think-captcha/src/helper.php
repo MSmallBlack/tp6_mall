@@ -35,11 +35,22 @@ function captcha_src($config = null): string
  * @param $id
  * @return string
  */
+<<<<<<< HEAD
 function captcha_img($id = ''): string
 {
     $src = captcha_src($id);
 
     return "<img src='{$src}' alt='captcha' onclick='this.src=\"{$src}?\"+Math.random();' />";
+=======
+function captcha_img($id = '',$width = '',$height = ''): string
+{
+    $src = captcha_src($id);
+    $style = '';
+    if($width && $height){
+        $style = "width=".$width." height=".$height;
+    }
+    return "<img src='{$src}' $style alt='captcha' onclick='this.src=\"{$src}?\"+Math.random();' />";
+>>>>>>> b272d874792455ab9666a377e8a4ff09cd654bc4
 }
 
 /**
