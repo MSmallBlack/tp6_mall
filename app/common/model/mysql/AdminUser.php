@@ -5,10 +5,11 @@
  * date   :2020/5/6
  * time   :23:58
  */
-
+declare(strict_types=1);
 namespace app\common\model\mysql;
 
 
+use mysql_xdevapi\DatabaseObject;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
@@ -18,13 +19,13 @@ class AdminUser extends Model
 {
     /**
      * 根据用户名获取登录用户信息
-     * @param $username
-     * @return array|bool|Model|null
+     * @param string $username
+     * @return DatabaseObject
      * @throws DataNotFoundException
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getAdminUserByUsername($username)
+    public function getAdminUserByUsername(string $username) : DatabaseObject
     {
         if(empty($username)){
             return false;
@@ -41,7 +42,7 @@ class AdminUser extends Model
      * @param $data
      * @return bool
      */
-    public function updateAdminUserById($id,$data)
+    public function updateAdminUserById(int $id,array $data) :bool
     {
         if(empty(intval($id)) || empty($data) || !is_array($data)){
             return false;

@@ -9,9 +9,11 @@
 
 namespace app\admin\controller;
 
+use app\admin\business\AdminUser;
 use Exception;
 use think\facade\Log;
 use think\facade\View;
+use think\response\Json;
 
 class Login extends AdminBase
 {
@@ -29,8 +31,7 @@ class Login extends AdminBase
 
     /**
      * 登录
-     * @return \think\response\Json
-     * @throws \think\Exception
+     * @return Json
      */
     public function check()
     {
@@ -52,7 +53,7 @@ class Login extends AdminBase
             return show(config('status.error'), $validate->getError());
         }
         try {
-            $adminUserBusiness = new \app\admin\business\AdminUser();
+            $adminUserBusiness = new AdminUser();
             $result = $adminUserBusiness->login($data);
         }catch (Exception $e){
             Log::error($e->getMessage());
