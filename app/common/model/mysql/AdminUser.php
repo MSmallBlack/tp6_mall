@@ -5,7 +5,7 @@
  * date   :2020/5/6
  * time   :23:58
  */
-declare(strict_types=1);
+
 namespace app\common\model\mysql;
 
 
@@ -20,12 +20,12 @@ class AdminUser extends Model
     /**
      * 根据用户名获取登录用户信息
      * @param string $username
-     * @return DatabaseObject
+     * @return object
      * @throws DataNotFoundException
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getAdminUserByUsername(string $username) : DatabaseObject
+    public function getAdminUserByUsername($username)
     {
         if(empty($username)){
             return false;
@@ -42,7 +42,7 @@ class AdminUser extends Model
      * @param $data
      * @return bool
      */
-    public function updateAdminUserById(int $id,array $data) :bool
+    public function updateAdminUserById($id,$data)
     {
         if(empty(intval($id)) || empty($data) || !is_array($data)){
             return false;

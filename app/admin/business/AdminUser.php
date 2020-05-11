@@ -48,7 +48,7 @@ class AdminUser
         $updateData = [
             'update_time' => time(),
             'last_login_time' => time(),
-            'last_login_ip' => request()->ip()
+            'last_login_ip' => \request()->ip()
         ];
         $result = $this->adminUserObj->updateAdminUserById($adminUser->id, $updateData);
         if (!$result) {

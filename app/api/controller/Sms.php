@@ -32,7 +32,7 @@ class Sms extends BaseController
             return show(config('status.error'),$e->getError());
         }
         //business调用
-        if(SmsBusiness::sendCode($phoneNumber,6)){
+        if(SmsBusiness::sendCode($phoneNumber,6,'baidu')){
             return show(config('status.success'),'发送验证码成功');
         }
         return show(config('status.error'),'发送验证码失败');

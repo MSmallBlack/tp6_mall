@@ -59,7 +59,6 @@ class Login extends AdminBase
             Log::error($e->getMessage());
             return show(config('status.error'), $e->getMessage());
         }
-
         if($result){
             return show(config('status.success'), "登录成功");
         }
