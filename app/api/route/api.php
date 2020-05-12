@@ -8,5 +8,8 @@
 
 use think\facade\Route;
 
-
+//发送验证码
 Route::rule('smscode','Sms/code','POST');
+
+//商城登录接口
+Route::rule('login','Login/index','POST');
