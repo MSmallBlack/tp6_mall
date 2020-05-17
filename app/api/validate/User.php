@@ -20,7 +20,8 @@ class User extends Validate
         'type' => [
             'require',
             'in' => '1,2'
-        ]
+        ],
+        'sex' => ['require', 'in' => '0,1,2']
     ];
 
     protected $message = [
@@ -30,13 +31,15 @@ class User extends Validate
         'code.number' => '短信验证码必须为数字',
         'code.min' => '短信验证码长度不低于4',
         'type.require' => '类型必须',
-        'type.in' => '类型数值错误'
+        'type.in' => '类型数值错误',
+        'sex.in' => '性别错误'
     ];
 
     protected $scene = [
         'send_code' => ['phone_number'],
         'login' => [
             'phone_number', 'code', 'type'
-        ]
+        ],
+        'update_user' => ['username', 'sex']
     ];
 }

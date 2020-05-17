@@ -25,6 +25,15 @@ class User
         $this->userObj = new UserModel();
     }
 
+    /**
+     * 登录
+     * @param $data
+     * @return array|bool
+     * @throws Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
     public function login($data)
     {
         //----------------redis+token => login
@@ -33,7 +42,10 @@ class User
         if (empty($redisCode) || $redisCode != $data['code']) {
             throw new Exception('验证码不存在');
         }
-        $user = $this->userObj->getUserByPhoneNumber($data['phone_number']);
+        if(!empty($data['code'])){    //手机验证码登录
+            $user = $this->userObj->getUserByPhoneNumber($data['phone_number']);
+        }
+
         if (!$user) {
             //insert
             $userData = [
@@ -67,7 +79,7 @@ class User
             'username' => $user->username,
         ];
         //redis记录token
-        $res = cache(config_path('redis.token_pre') . $token, $redisData,Time::userLoginExpiresTime($data['type']));
+        $res = cache(config_path('redis.token_pre') . $token, $redisData, Time::userLoginExpiresTime($data['type']));
 
         if ($res) {
             return [
@@ -79,4 +91,65 @@ class User
         }
 
     }
+
+
+    /**
+     * 通过id获取正常的user
+     * @param $id
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalUserById($id)
+    {
+        $user = $this->userObj->getUserById($id);
+        if (!$user || $user->status != config('status.mysql.table_normal')) {
+            return [];
+        }
+        return $user->toArray();
+    }
+
+
+    /**
+     * 通过用户名获取正常的user
+     * @param $id
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalUserByUsername($username)
+    {
+        $user = $this->userObj->getUserByUsername($username);
+        if (!$user || $user->status != config('status.mysql.table_normal')) {
+            return [];
+        }
+        return $user->toArray();
+    }
+
+    /**
+     * 更新USER数据
+     * @param $id
+     * @param $data
+     * @throws Exception
+     */
+    public function updateUser($id, $data)
+    {
+        $normalUser = $this->getNormalUserById($id);
+        if(!$normalUser){
+            throw new Exception('不存在该用户');
+        }
+        //检查用户名是否存在
+        $user = $this->getNormalUserByUsername($data['username']);
+        if($user && $user['id'] != $id){
+            throw new Exception('该用户已经存在，请重新设置');
+        }
+        try {
+            return $this->userObj->updateUserById($id, $data);
+        } catch (Exception $e) {
+            throw new Exception('数据库内部异常');
+        }
+    }
+
 }

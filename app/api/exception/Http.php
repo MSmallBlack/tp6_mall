@@ -12,6 +12,7 @@ namespace app\api\exception;
 
 use think\Exception;
 use think\exception\Handle;
+use think\exception\HttpResponseException;
 use think\Response;
 use Throwable;
 
@@ -29,8 +30,12 @@ class Http extends Handle
      */
     public function render($request, Throwable $e): Response
     {
-        if($e instanceof Exception){
-            return show($e->getCode(),$e->getMessage());
+        if ($e instanceof Exception) {
+            return show($e->getCode(), $e->getMessage());
+        }
+        //处理apibase
+        if ($e instanceof HttpResponseException) {
+            return parent::render($request, $e);
         }
         if (method_exists($e, "getStatusCode")) {
             $httpStatus = $e->getStatusCode();

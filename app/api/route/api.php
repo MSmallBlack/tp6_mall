@@ -13,3 +13,6 @@ Route::rule('smscode','Sms/code','POST');
 
 //商城登录接口
 Route::rule('login','Login/index','POST');
+
+//资源路由
+Route::resource('user','User');

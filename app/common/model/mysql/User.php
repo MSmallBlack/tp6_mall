@@ -57,4 +57,40 @@ class User extends Model
         ];
         return $this->where($where)->save($data);
     }
+
+    /**
+     * 获取user数据
+     * @param $id
+     * @return array|bool|Model|null
+     * @throws DataNotFoundException
+     * @throws DbExceptionAlias
+     * @throws ModelNotFoundException
+     */
+    public function getUserById($id)
+    {
+        $id = intval($id);
+        if(empty($id)){
+            return false;
+        }
+        return $this->find($id);
+    }
+
+    /**
+     * 根据用户名获取user
+     * @param $username
+     * @return array|bool|Model|null
+     * @throws DataNotFoundException
+     * @throws DbExceptionAlias
+     * @throws ModelNotFoundException
+     */
+    public function getUserByUsername($username)
+    {
+        if(empty($username)){
+            return false;
+        }
+        $where =[
+            'username' => $username
+        ];
+        return $this->where($where)->find();
+    }
 }
