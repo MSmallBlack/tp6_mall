@@ -38,7 +38,7 @@ class User extends Validate
     protected $scene = [
         'send_code' => ['phone_number'],
         'login' => [
-            'phone_number', 'code', 'type'
+            'phone_number', 'type'
         ],
         'update_user' => ['username', 'sex']
     ];

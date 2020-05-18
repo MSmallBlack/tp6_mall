@@ -37,15 +37,22 @@ class User
     public function login($data)
     {
         //----------------redis+token => login
-        $redisCode = cache(config('redis.code_pre'), $data['phone_number']);
-        //判断验证码是否和redis中的一致
-        if (empty($redisCode) || $redisCode != $data['code']) {
-            throw new Exception('验证码不存在');
-        }
-        if(!empty($data['code'])){    //手机验证码登录
-            $user = $this->userObj->getUserByPhoneNumber($data['phone_number']);
-        }
 
+        $user = $this->userObj->getUserByPhoneNumber($data['phone_number']);
+        if(!empty($data['code'])){    //手机验证码登录
+//            $user = $this->userObj->getUserByPhoneNumber($data['phone_number']);
+            $redisCode = cache(config('redis.code_pre'), $data['phone_number']);
+            //判断验证码是否和redis中的一致
+            if (empty($redisCode) || $redisCode != $data['code']) {
+                throw new Exception('验证码不存在');
+            }
+        }else{   //手机号，密码登录
+            //判断密码是否正确
+            if($user->password != md5(config('status.md5_str') . $data['password'])){
+                dump(333);
+                throw new Exception('密码错误');
+            }
+        }
         if (!$user) {
             //insert
             $userData = [
@@ -74,13 +81,13 @@ class User
         }
         //生成token
         $token = Src::getLoginToken($data['phone_number']);
+
         $redisData = [
             'id' => $user->id,
             'username' => $user->username,
         ];
         //redis记录token
         $res = cache(config_path('redis.token_pre') . $token, $redisData, Time::userLoginExpiresTime($data['type']));
-
         if ($res) {
             return [
                 'token' => $token,

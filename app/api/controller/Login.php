@@ -31,7 +31,7 @@ class Login extends BaseController
         //会话保存时长
         $type = input('param.type',0,'intval');
         //手机号，密码登录
-//        $password = input('param.password','','trim');
+        $password = input('param.password','','trim');
         if(!empty($code)){
             //参数校验
             $data = [
@@ -39,20 +39,19 @@ class Login extends BaseController
                 'code' => $code,
                 'type' => $type
             ];
+        }else{
+            $data = [
+                'phone_number' => $phoneNumber,
+                'password' => $password,
+                'type' => $type
+            ];
         }
-//        else{
-//            $data = [
-//                'phone_number' => $phoneNumber,
-//                'password' => $password,
-//                'type' => $type
-//            ];
-//        }
-
         $validate = new User();
         if(!$validate->scene('login')->check($data)){
             return show(config('status.error'),$validate->getError());
         }
         try {
+
             $result = (new \app\common\business\User())->login($data);
 
         }catch (Exception $e){
