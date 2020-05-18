@@ -49,7 +49,6 @@ class User
         }else{   //手机号，密码登录
             //判断密码是否正确
             if($user->password != md5(config('status.md5_str') . $data['password'])){
-                dump(333);
                 throw new Exception('密码错误');
             }
         }
@@ -87,7 +86,7 @@ class User
             'username' => $user->username,
         ];
         //redis记录token
-        $res = cache(config_path('redis.token_pre') . $token, $redisData, Time::userLoginExpiresTime($data['type']));
+        $res = cache(config('redis.token_pre') . $token, $redisData, Time::userLoginExpiresTime($data['type']));
         if ($res) {
             return [
                 'token' => $token,

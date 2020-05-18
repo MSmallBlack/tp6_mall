@@ -22,7 +22,7 @@ class User extends AuthBase
             'username' => $normalUser['username'],
             'sex' => $normalUser['sex']
         ];
-        return show(config('status.success'),'ok',$result);
+        return show(config('status.success'), 'ok', $result);
 
     }
 
@@ -33,24 +33,24 @@ class User extends AuthBase
      */
     public function update()
     {
-        $username = input('param.username','','trim');
-        $sex = input('param.sex',0,'intval');
+        $username = input('param.username', '', 'trim');
+        $sex = input('param.sex', 0, 'intval');
         $data = [
             'username' => $username,
             'sex' => $sex
         ];
         $validate = (new userValidate())->scene('update_user');
-        if(!$validate->check($data)){
-            return show(config('status.error'),$validate->getError());
+        if (!$validate->check($data)) {
+            return show(config('status.error'), $validate->getError());
         }
         try {
             $user = (new UserBusiness())->updateUser($this->userId, $data);
         } catch (Exception $e) {
-            return show(config('status.error'),$e->getMessage());
+            return show(config('status.error'), $e->getMessage());
         }
-        if(!$user){
-            return show(config('status.error'),'更新失败');
+        if (!$user) {
+            return show(config('status.error'), '更新失败');
         }
-        return show(1,'ok');
+        return show(1, 'ok');
     }
 }
