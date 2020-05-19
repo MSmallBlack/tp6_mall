@@ -13,12 +13,12 @@ namespace app\api\controller;
 /**
  * 用户退出登录
  */
-class Loginout extends AuthBase
+class Logout extends AuthBase
 {
     public function index()
     {
         //删除redis中的缓存与token
-        $res = cache(config_path('redis.token_pre') . $this->accessToken,NULL );
+        $res = cache(config('redis.token_pre') . $this->accessToken,NULL );
         if($res){
             return show(config('status.success'),'退出登录成功');
         }
