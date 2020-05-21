@@ -6,6 +6,7 @@
  * time   :23:58
  */
 declare(strict_types=1);
+
 namespace app\common\business;
 
 use AlibabaCloud\Client\Exception\ClientException;
@@ -23,7 +24,7 @@ class Sms
      * @param string $type
      * @return bool
      */
-    public static function sendCode(string $phoneNumber,int $len,string $type = 'ali'): bool
+    public static function sendCode(string $phoneNumber, int $len, string $type = 'ali'): bool
     {
         $code = Num::getCode($len);
 
@@ -35,12 +36,12 @@ class Sms
 //        $sms = $class::sendCode($phoneNumber, $code);
         $classStats = ClassArr::smsClassStat();
 
-        $classObj = ClassArr::initClass($type,$classStats);
+        $classObj = ClassArr::initClass($type, $classStats);
         $sms = $classObj::sendCode($phoneNumber, $code);
 
-        if($sms){
+        if ($sms) {
             //把code记录到redis
-            cache(config('redis.code_pre').$phoneNumber,$code,config('redis.code_expire'));
+            cache(config('redis.code_pre') . $phoneNumber, $code, config('redis.code_expire'));
         }
 
         return $sms;

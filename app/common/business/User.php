@@ -18,11 +18,11 @@ use think\Exception;
  */
 class User
 {
-    public $userObj = null;
+    public $model = null;
 
     public function __construct()
     {
-        $this->userObj = new UserModel();
+        $this->model = new UserModel();
     }
 
     /**
@@ -38,17 +38,17 @@ class User
     {
         //----------------redis+token => login
 
-        $user = $this->userObj->getUserByPhoneNumber($data['phone_number']);
-        if(!empty($data['code'])){    //手机验证码登录
-//            $user = $this->userObj->getUserByPhoneNumber($data['phone_number']);
+        $user = $this->model->getUserByPhoneNumber($data['phone_number']);
+        if (!empty($data['code'])) {    //手机验证码登录
+//            $user = $this->model->getUserByPhoneNumber($data['phone_number']);
             $redisCode = cache(config('redis.code_pre'), $data['phone_number']);
             //判断验证码是否和redis中的一致
             if (empty($redisCode) || $redisCode != $data['code']) {
                 throw new Exception('验证码不存在');
             }
-        }else{   //手机号，密码登录
+        } else {   //手机号，密码登录
             //判断密码是否正确
-            if($user->password != md5(config('status.md5_str') . $data['password'])){
+            if ($user->password != md5(config('status.md5_str') . $data['password'])) {
                 throw new Exception('密码错误');
             }
         }
@@ -61,8 +61,8 @@ class User
                 'status' => config('status.mysql.table_normal')
             ];
             try {
-                $this->userObj->save($userData);
-                $userId = $this->userObj->id;
+                $this->model->save($userData);
+                $userId = $this->model->id;
             } catch (Exception $e) {
                 throw new Exception('数据库内部异常');
             }
@@ -73,7 +73,7 @@ class User
                 'last_login_ip' => request()->ip()
             ];
             try {
-                $this->userObj->updateUserById($user->id, $userData);
+                $this->model->updateUserById($user->id, $userData);
             } catch (Exception $e) {
                 throw new Exception('数据库内部异常');
             }
@@ -109,7 +109,7 @@ class User
      */
     public function getNormalUserById($id)
     {
-        $user = $this->userObj->getUserById($id);
+        $user = $this->model->getUserById($id);
         if (!$user || $user->status != config('status.mysql.table_normal')) {
             return [];
         }
@@ -127,7 +127,7 @@ class User
      */
     public function getNormalUserByUsername($username)
     {
-        $user = $this->userObj->getUserByUsername($username);
+        $user = $this->model->getUserByUsername($username);
         if (!$user || $user->status != config('status.mysql.table_normal')) {
             return [];
         }
@@ -143,16 +143,16 @@ class User
     public function updateUser($id, $data)
     {
         $normalUser = $this->getNormalUserById($id);
-        if(!$normalUser){
+        if (!$normalUser) {
             throw new Exception('不存在该用户');
         }
         //检查用户名是否存在
         $user = $this->getNormalUserByUsername($data['username']);
-        if($user && $user['id'] != $id){
+        if ($user && $user['id'] != $id) {
             throw new Exception('该用户已经存在，请重新设置');
         }
         try {
-            return $this->userObj->updateUserById($id, $data);
+            return $this->model->updateUserById($id, $data);
         } catch (Exception $e) {
             throw new Exception('数据库内部异常');
         }

@@ -27,10 +27,10 @@ class AdminUser extends Model
      */
     public function getAdminUserByUsername($username)
     {
-        if(empty($username)){
+        if (empty($username)) {
             return false;
         }
-        $where =[
+        $where = [
             'username' => $username
         ];
         return $this->where($where)->find();
@@ -42,9 +42,9 @@ class AdminUser extends Model
      * @param $data
      * @return bool
      */
-    public function updateAdminUserById($id,$data)
+    public function updateAdminUserById($id, $data)
     {
-        if(empty(intval($id)) || empty($data) || !is_array($data)){
+        if (empty(intval($id)) || empty($data) || !is_array($data)) {
             return false;
         }
         $where = [

@@ -22,6 +22,7 @@ class User extends Model
      * @var bool
      */
     protected $autoWriteTimestamp = true;
+
     /**
      * 通过手机号获取用户信息
      * @param $phoneNumber
@@ -32,10 +33,10 @@ class User extends Model
      */
     public function getUserByPhoneNumber($phoneNumber)
     {
-        if(empty($phoneNumber)){
+        if (empty($phoneNumber)) {
             return false;
         }
-        $where =[
+        $where = [
             'phone_number' => $phoneNumber
         ];
         return $this->where($where)->find();
@@ -47,9 +48,9 @@ class User extends Model
      * @param $data
      * @return bool
      */
-    public function updateUserById($id,$data)
+    public function updateUserById($id, $data)
     {
-        if(empty(intval($id)) || empty($data) || !is_array($data)){
+        if (empty(intval($id)) || empty($data) || !is_array($data)) {
             return false;
         }
         $where = [
@@ -69,7 +70,7 @@ class User extends Model
     public function getUserById($id)
     {
         $id = intval($id);
-        if(empty($id)){
+        if (empty($id)) {
             return false;
         }
         return $this->find($id);
@@ -85,10 +86,10 @@ class User extends Model
      */
     public function getUserByUsername($username)
     {
-        if(empty($username)){
+        if (empty($username)) {
             return false;
         }
-        $where =[
+        $where = [
             'username' => $username
         ];
         return $this->where($where)->find();

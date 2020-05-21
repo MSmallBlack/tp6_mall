@@ -51,4 +51,54 @@ class Category extends Model
         ];
         return $this->field($field)->where($where)->select();
     }
+
+
+    /**
+     * 获取分类数据
+     * @param $data
+     * @param $num
+     * @return \think\Paginator
+     * @throws \think\db\exception\DbException
+     */
+    public function getLists($data, $num = 10)
+    {
+        $order = [
+            'listorder' => 'desc',
+            'id' => 'desc'
+        ];
+        $result = $this->where('status', '<>', config('status.mysql.table_delete'))
+            ->where($data)
+            ->order($order)
+            ->paginate($num);
+        return $result;
+    }
+
+
+    /**
+     * update
+     * @param $id
+     * @param $data
+     * @return bool
+     */
+    public function updateById($id, $data)
+    {
+        $data['update_time'] = time();
+        return $this->where('id', $id)->save($data);
+    }
+
+
+    /**
+     * 获取子分类数目
+     * @param $data
+     * @return mixed
+     */
+    public function getChildrenInPids($data)
+    {
+        $where[] = ['pid','in',$data['pid']];
+        $where[] = ['status','<>',config('status.mysql.table_delete')];
+        return $this->field('pid,count(*) as count')
+            ->where($where)
+            ->group('pid')
+            ->select();
+    }
 }
