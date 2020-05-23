@@ -49,7 +49,11 @@ class Category extends Model
         $where = [
             'status' => config('status.mysql.table_normal')
         ];
-        return $this->field($field)->where($where)->select();
+        $order = [
+            'listorder' => 'desc',
+            'id' => 'desc'
+        ];
+        return $this->field($field)->where($where)->order($order)->select();
     }
 
 

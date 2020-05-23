@@ -64,6 +64,16 @@ class Category
         return $categorys;
     }
 
+    public function getNormalAllCategorys()
+    {
+        $field = "id as category_id,name,pid";
+        $categorys = $this->model->getNormalCategorys($field);
+        if (!$categorys) {
+            $categorys = [];
+        }
+        $categorys = $categorys->toArray();
+        return $categorys;
+    }
 
     /**
      * 获取分类数据
