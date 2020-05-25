@@ -32,4 +32,29 @@ class Arr
         }
         return $tree;
     }
+
+
+    /**
+     * 三级分类树
+     * @param $data
+     * @param int $firstCount   一级
+     * @param int $secondCount  二级
+     * @param int $threeCount   三级
+     * @return array
+     */
+    public static function sliceTreeArr($data,$firstCount = 5,$secondCount = 3,$threeCount = 5)
+    {
+        $data = array_slice($data,0,$firstCount);
+        foreach($data as $key => $value){
+            if(!emmpty($value['list'])){
+                $data[$key]['list'] = array_slice($value['list'],0,$secondCount);
+                foreach($value['list'] as $key1 => $value1){
+                    if(!empty($value1['list'])){
+                        $data[$key]['list'][$key1]['list'] = array_slice($value1['list'],0,$threeCount);
+                    }
+                }
+            }
+        }
+        return $data;
+    }
 }

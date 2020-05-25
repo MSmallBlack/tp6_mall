@@ -10,6 +10,9 @@ namespace app\api\controller;
 
 use app\common\business\Category as CategoryBusiness;
 use app\common\lib\Arr;
+use think\Exception;
+use think\facade\Log;
+use think\response\Json;
 
 /**
  * 商品分类
@@ -17,12 +20,29 @@ use app\common\lib\Arr;
 class Category extends ApiBase
 {
 
+    /**
+     * 商品分类
+     * @return Json
+     */
     public function index()
     {
-        //获取所有分类
-        $categoryBusiness = new CategoryBusiness();
-        $categorys = $categoryBusiness->getNormalAllCategorys();
+        try {
+            //获取所有分类
+            $categoryBusiness = new CategoryBusiness();
+            $categorys = $categoryBusiness->getNormalAllCategorys();
+
+        } catch (Exception $e) {
+            //记录日志
+            (new Log)->record('内部异常','error');
+            //返回空数据
+            return show(config('status.success'), 'ok', '内部异常');
+        }
+        if (!$categorys) {
+            //记录日志
+            (new Log)->record('分类为空','error');
+            return show(config('status.success'), 'ok', '数据为空');
+        }
         $result = Arr::getTree($categorys);
-        return show(config('status.success'),'ok',$result);
+        return show(config('status.success'), 'ok', $result);
     }
 }
