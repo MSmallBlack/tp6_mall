@@ -193,4 +193,21 @@ class Category
     }
 
 
+    /**
+     * 获取一级分类
+     * @param int $pid
+     * @param string $field
+     * @return array
+     */
+    public function getNormalByPid($pid = 0, $field = 'id,name,pid')
+    {
+        try {
+            $res = $this->model->getNormalByPid($pid, $field);
+        } catch (Exception $e) {
+            return [];
+        }
+        return $res->toArray();
+    }
+
+
 }

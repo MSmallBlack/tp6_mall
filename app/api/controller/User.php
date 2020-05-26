@@ -8,8 +8,8 @@
 
 namespace app\api\controller;
 
-use app\common\business\User as UserBusiness;
-use app\api\validate\User as UserValidate;
+use app\common\business\User as userBusiness;
+use app\api\validate\User as userValidate;
 use think\Exception;
 
 class User extends AuthBase

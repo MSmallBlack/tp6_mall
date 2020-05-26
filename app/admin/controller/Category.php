@@ -132,4 +132,29 @@ class Category extends AdminBase
     }
 
 
+    /**
+     * 弹出层分类显示
+     * @return string
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function dialog()
+    {
+        //获取一级分类
+        $categorys = (new CategoryBusiness())->getNormalByPid();
+        return View::fetch('',[
+            'categorys' => json_encode($categorys)
+        ]);
+    }
+
+
+    public function getByPid()
+    {
+        $pid = input('param.pid',0,'intval');
+        $categorys = (new CategoryBusiness())->getNormalByPid($pid);
+        return show(config('status.success'),'ok',$categorys);
+    }
+
+
 }

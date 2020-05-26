@@ -98,11 +98,34 @@ class Category extends Model
      */
     public function getChildrenInPids($data)
     {
-        $where[] = ['pid','in',$data['pid']];
-        $where[] = ['status','<>',config('status.mysql.table_delete')];
+        $where[] = ['pid', 'in', $data['pid']];
+        $where[] = ['status', '<>', config('status.mysql.table_delete')];
         return $this->field('pid,count(*) as count')
             ->where($where)
             ->group('pid')
             ->select();
+    }
+
+
+    /**
+     * 获取一级分类内容
+     * @param int $pid
+     * @param $field
+     * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalByPid($pid = 0, $field)
+    {
+        $where = [
+            'pid' => $pid,
+            'status' => config('status.mysql.table_normal')
+        ];
+        $order = [
+            'listorder' => 'desc',
+            'id' => 'desc'
+        ];
+        return $this->field($field)->where($where)->order($order)->select();
     }
 }
