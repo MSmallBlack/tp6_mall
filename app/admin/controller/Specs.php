@@ -12,6 +12,10 @@ namespace app\admin\controller;
 use think\facade\View;
 use app\common\business\Specs as SpecsBusiness;
 
+
+/**
+ * 规格
+ */
 class Specs extends AdminBase
 {
 

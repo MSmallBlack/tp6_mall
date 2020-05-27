@@ -12,6 +12,9 @@ namespace app\common\business;
 use app\common\model\mysql\Specs as SpecsModel;
 use think\Exception;
 
+/**
+ * 规格
+ */
 class Specs
 {
     public $model = null;

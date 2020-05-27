@@ -12,7 +12,11 @@ namespace app\common\business;
 use app\common\model\mysql\SpecsValue as SpecsValueModel;
 use think\Exception;
 
-class SpecsValue
+
+/**
+ * 规格属性
+ */
+class SpecsValue extends BusinessBase
 {
     public $model = null;
 
@@ -21,23 +25,6 @@ class SpecsValue
         $this->model = new SpecsValueModel();
     }
 
-
-    /**
-     * insert
-     * @param $data
-     * @return bool|mixed
-     */
-    public function add($data)
-    {
-        $data['status'] = 1;
-
-        try {
-            $this->model->save($data);
-        }catch (Exception $e){
-            return 0;
-        }
-        return $this->model->id;
-    }
 
 
     /**
