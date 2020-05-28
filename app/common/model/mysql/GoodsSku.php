@@ -9,14 +9,9 @@
 namespace app\common\model\mysql;
 
 
-use think\Model;
 
-class GoodsSku extends Model
+class GoodsSku extends BaseModel
 {
 
-    /**
-     * 自动写入create_time时间
-     * @var bool
-     */
-    protected $autoWriteTimestamp = true;
+
 }

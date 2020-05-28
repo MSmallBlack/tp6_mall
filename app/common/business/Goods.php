@@ -9,8 +9,12 @@
 namespace app\common\business;
 
 
+use app\common\lib\ListPage;
 use app\common\model\mysql\Goods as GoodsModel;
 use think\Exception;
+use think\facade\Log;
+
+
 
 class Goods extends BusinessBase
 {
@@ -28,46 +32,81 @@ class Goods extends BusinessBase
      * @param $data
      * @return bool|int
      * @throws Exception
+     * @throws \Exception
      */
     public function insertData($data)
     {
-        //insert to goods
-        $goodsId = $this->add($data);
-        if (!$goodsId) {
-            return $goodsId;
-        }
-        //insert to sku
-        if ($data['goods_specs_type'] == 1) {   // 单一规格
-            $goodsSkuData = [
-                'goods_id' => $goodsId
-            ];
-            return true;
-        } else {     //多规格
-            $goodsSkuBusiness = new GoodsSku();
-            $data['goods_id'] = $goodsId;
-            //insert batch sku
-            $res = $goodsSkuBusiness->saveAll($data);
-            if (!empty($res)) {
-                //总的库存
-                $stock = array_sum(array_column($res, 'stock'));
-                //update goods data
-                $goodsUpdateData = [
-                    'price' => $res[0]['price'],
-                    'cost_price' => $res[0]['cost_price'],
-                    'stock' => $stock,
-                    'sku_id' => $res[0]['id']
-                ];
-                $goodsRes = $this->model->updateById($goodsId, $goodsUpdateData);
-                if (!$goodsRes) {
-                    throw new Exception('goods表更新失败');
-                }
-            } else {
-                throw new Exception('sku新增失败');
+        //开启事务
+        $this->model->startTrans();
+        try {
+            //insert to goods
+            $goodsId = $this->add($data);
+            if (!$goodsId) {
+                return $goodsId;
             }
+            //insert to sku
+            if ($data['goods_specs_type'] == 1) {   // 单一规格
+                $goodsSkuData = [
+                    'goods_id' => $goodsId
+                ];
+                return true;
+            } else {     //多规格
+                $goodsSkuBusiness = new GoodsSku();
+                $data['goods_id'] = $goodsId;
+                //insert batch sku
+                $res = $goodsSkuBusiness->saveAll($data);
+                if (!empty($res)) {
+                    //总的库存
+                    $stock = array_sum(array_column($res, 'stock'));
+                    //update goods data
+                    $goodsUpdateData = [
+                        'price' => $res[0]['price'],
+                        'cost_price' => $res[0]['cost_price'],
+                        'stock' => $stock,
+                        'sku_id' => $res[0]['id']
+                    ];
+                    $goodsRes = $this->model->updateById($goodsId, $goodsUpdateData);
+                    if (!$goodsRes) {
+                        throw new Exception('goods表更新失败');
+                    }
+                } else {
+                    throw new Exception('sku新增失败');
+                }
+            }
+            //事务提交
+            $this->model->column();
             return true;
-
-
+        }catch (Exception $e){
+            //写入日志
+            Log::create('事务回滚，商品新增失败');
+            //回滚
+            $this->model->rollback();
+            return false;
         }
 
+    }
+
+
+    /**
+     * 获取分页数据
+     * @param $data
+     * @param $num
+     * @return array
+     */
+    public function getList($data,$num)
+    {
+        //检索
+        $likeKeys = [];
+        if(!empty($data)){
+            $likeKeys = array_keys($data);
+        }
+        try {
+            $list = $this->model->getList($likeKeys,$data,$num);
+            $res = $list->toArray();
+        }catch (Exception $e){
+            //数据为空时的返回
+            $res = ListPage::listIsEmpty($num);
+        }
+        return $res;
     }
 }

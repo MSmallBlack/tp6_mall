@@ -11,13 +11,9 @@ namespace app\common\model\mysql;
 
 use think\Model;
 
-class Category extends Model
+class Category extends BaseModel
 {
-    /**
-     * 自动写入create_time时间
-     * @var bool
-     */
-    protected $autoWriteTimestamp = true;
+
 
 
     /**
@@ -78,17 +74,6 @@ class Category extends Model
     }
 
 
-    /**
-     * update
-     * @param $id
-     * @param $data
-     * @return bool
-     */
-    public function updateById($id, $data)
-    {
-        $data['update_time'] = time();
-        return $this->where('id', $id)->save($data);
-    }
 
 
     /**

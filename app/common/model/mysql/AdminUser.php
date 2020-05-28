@@ -9,13 +9,11 @@
 namespace app\common\model\mysql;
 
 
-use mysql_xdevapi\DatabaseObject;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
-use think\Model;
 
-class AdminUser extends Model
+class AdminUser extends BaseModel
 {
     /**
      * 根据用户名获取登录用户信息

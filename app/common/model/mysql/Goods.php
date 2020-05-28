@@ -9,27 +9,50 @@
 namespace app\common\model\mysql;
 
 
-use think\Model;
-
-class Goods extends Model
+class Goods extends BaseModel
 {
 
     /**
-     * 自动写入create_time时间
-     * @var bool
+     * title search
+     * @param $query
+     * @param $value
      */
-    protected $autoWriteTimestamp = true;
-
+    public function searchTitleAttr($query, $value)
+    {
+        $query->where('title','like','%'.$value.'%');
+    }
 
     /**
-     * update
-     * @param $id
-     * @param $data
-     * @return bool
+     * create_time search
+     * @param $query
+     * @param $value
      */
-    public function updateById($id,$data)
+    public function searchCreateTimeAttr($query,$value)
     {
-         $data['update_time'] = time();
-         return $this->where('id',$id)->save($data);
+        $query->whereBetweenTime('create_time',$value[0],$value[1]);
     }
+
+    /**
+     * get goods paginate data
+     * @param $likeKeys
+     * @param $data
+     * @param $num
+     * @return \think\Paginator
+     * @throws \think\db\exception\DbException
+     */
+    public function getList($likeKeys, $data, $num)
+    {
+        $order = [
+            'listorder' => 'desc',
+            'id' => 'desc'
+        ];
+        if (!empty($likeKeys)) {
+            //搜索器
+            $res = $this->withSearch($likeKeys, $data);
+        } else {
+            $res = $this;
+        }
+        return $res->whereIn('status', [0, 1])->order($order)->paginate($num);
+    }
+
 }

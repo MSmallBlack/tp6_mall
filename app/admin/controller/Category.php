@@ -9,6 +9,7 @@
 namespace app\admin\controller;
 
 
+use app\common\lib\ListPage;
 use app\common\lib\Status;
 use think\Exception;
 use think\facade\View;
@@ -26,7 +27,7 @@ class Category extends AdminBase
         try {
             $categorys = (new CategoryBusiness())->getLists($data, 5);
         } catch (Exception $e) {
-            $categorys = [];
+            $categorys = ListPage::listIsEmpty(5);
         }
 
         return View::fetch('', [

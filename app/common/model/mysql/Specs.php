@@ -9,16 +9,11 @@
 namespace app\common\model\mysql;
 
 
-use think\Model;
 
-class Specs extends Model
+class Specs extends BaseModel
 {
 
-    /**
-     * 自动写入create_time时间
-     * @var bool
-     */
-    protected $autoWriteTimestamp = true;
+
 
     /**
      * 获取状态正常的规格名称

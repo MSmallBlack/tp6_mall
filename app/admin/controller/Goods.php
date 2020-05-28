@@ -9,6 +9,8 @@
 namespace app\admin\controller;
 
 use think\Exception;
+use think\exception\ValidateException;
+use think\facade\Log;
 use think\facade\View;
 use app\common\business\Goods as GoodsBusiness;
 
@@ -18,9 +20,26 @@ use app\common\business\Goods as GoodsBusiness;
  */
 class Goods extends AdminBase
 {
+    /**
+     * goods list
+     * @return string
+     * @throws \Exception
+     */
     public function index()
     {
-        return View::fetch();
+        $data = [];
+        $title = input('param.title','','trim');
+        $time = input('param.time','','trim');
+        if(!empty($title)){
+            $data['title'] = $title;
+        }
+        if(!empty($time)){
+            $data['create_time'] = explode(' _ ',$time);
+        }
+        $goods = (new GoodsBusiness())->getList($data,5);
+        return View::fetch('',[
+            'goods' => $goods
+        ]);
     }
 
 
@@ -29,6 +48,11 @@ class Goods extends AdminBase
         return View::fetch();
     }
 
+    /**
+     * insert goods
+     * @return \think\response\Json
+     * @throws Exception
+     */
     public function save()
     {
         if (!$this->request->isPost()) {
@@ -36,15 +60,20 @@ class Goods extends AdminBase
         }
         //接受参数
         $data = input('param.');
+        //表单令牌
+        $check = $this->request->checkToken('__token__');
+        if($check === false){
+            //记录日志
+            Log::create("token验证失败,非法请求");
+//            throw new ValidateException('token验证失败');
+            return show(config('status.error'), 'token验证失败，非法请求');
+        }
         $data['category_path_id'] = $data['category_id'];
         $result = explode(',', $data['category_path_id']);
         $data['category_id'] = end($result);
 
-        try {
-            $res = (new GoodsBusiness())->insertData($data);
-        } catch (Exception $e) {
-            return show(config('status.error'), $e->getMessage());
-        }
+        $res = (new GoodsBusiness())->insertData($data);
+
         if (!$res) {
             return show(config('status.error'), '新增商品失败');
         }

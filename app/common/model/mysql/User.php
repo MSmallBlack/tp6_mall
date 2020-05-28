@@ -12,16 +12,10 @@ namespace app\common\model\mysql;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException as DbExceptionAlias;
 use think\db\exception\ModelNotFoundException;
-use think\Model;
 
-class User extends Model
+class User extends BaseModel
 {
 
-    /**
-     * 自动写入create_time时间
-     * @var bool
-     */
-    protected $autoWriteTimestamp = true;
 
     /**
      * 通过手机号获取用户信息

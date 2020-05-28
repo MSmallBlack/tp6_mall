@@ -9,15 +9,9 @@
 namespace app\common\model\mysql;
 
 
-use think\Model;
 
-class SpecsValue extends Model
+class SpecsValue extends BaseModel
 {
-    /**
-     * 自动写入create_time时间
-     * @var bool
-     */
-    protected $autoWriteTimestamp = true;
 
 
     /**
