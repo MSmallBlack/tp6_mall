@@ -19,7 +19,7 @@ class Goods extends BaseModel
      */
     public function searchTitleAttr($query, $value)
     {
-        $query->where('title','like','%'.$value.'%');
+        $query->where('title', 'like', '%' . $value . '%');
     }
 
     /**
@@ -27,9 +27,9 @@ class Goods extends BaseModel
      * @param $query
      * @param $value
      */
-    public function searchCreateTimeAttr($query,$value)
+    public function searchCreateTimeAttr($query, $value)
     {
-        $query->whereBetweenTime('create_time',$value[0],$value[1]);
+        $query->whereBetweenTime('create_time', $value[0], $value[1]);
     }
 
     /**
@@ -53,6 +53,35 @@ class Goods extends BaseModel
             $res = $this;
         }
         return $res->whereIn('status', [0, 1])->order($order)->paginate($num);
+    }
+
+
+    /**
+     * 首页大图推荐
+     * @param array $where
+     * @param  $field
+     * @param int $limit
+     * @return \think\Collection
+     */
+    public function getNormalGoodsCondition($where, $field = true, $limit = 5)
+    {
+        $order = [
+            'listorder' => 'desc',
+            'id' => 'desc'
+        ];
+        $where['status'] = config('status.success');
+        return $this->field($field)->where($where)->order($order)->limit($limit)->select();
+
+    }
+
+    /**
+     * 图片获取
+     * @param $value
+     * @return string
+     */
+    public function getImageAttr($value)
+    {
+        return request()->domain().$value;
     }
 
 }

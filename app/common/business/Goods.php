@@ -55,6 +55,7 @@ class Goods extends BusinessBase
                 $data['goods_id'] = $goodsId;
                 //insert batch sku
                 $res = $goodsSkuBusiness->saveAll($data);
+
                 if (!empty($res)) {
                     //总的库存
                     $stock = array_sum(array_column($res, 'stock'));
@@ -67,14 +68,16 @@ class Goods extends BusinessBase
                     ];
                     $goodsRes = $this->model->updateById($goodsId, $goodsUpdateData);
                     if (!$goodsRes) {
+                        Log::create('sku新增成功,goods表更新失败');
                         throw new Exception('goods表更新失败');
                     }
                 } else {
+                    Log::create('sku新增失败');
                     throw new Exception('sku新增失败');
                 }
             }
             //事务提交
-            $this->model->column();
+            $this->model->commit();
             return true;
         }catch (Exception $e){
             //写入日志
@@ -108,5 +111,28 @@ class Goods extends BusinessBase
             $res = ListPage::listIsEmpty($num);
         }
         return $res;
+    }
+
+
+    /**
+     * 首页大图
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getRotationChart()
+    {
+        $data = [
+            'is_index_recommend' => 1
+        ];
+        $field = "sku_id as id,title,big_image as image";
+        try {
+            $res = $this->model->getNormalGoodsCondition($data,$field);
+
+        }catch (Exception $e){
+            $res = [];
+        }
+        return $res->toArray();
     }
 }

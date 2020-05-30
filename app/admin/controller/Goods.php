@@ -60,14 +60,15 @@ class Goods extends AdminBase
         }
         //接受参数
         $data = input('param.');
+        //实际应运发现，时间间隔太短就会失效，极其不友好，故取消验证
         //表单令牌
-        $check = $this->request->checkToken('__token__');
-        if($check === false){
-            //记录日志
-            Log::create("token验证失败,非法请求");
-//            throw new ValidateException('token验证失败');
-            return show(config('status.error'), 'token验证失败，非法请求');
-        }
+//        $check = $this->request->checkToken('__token__');
+//        if($check === false){
+//            //记录日志
+//            Log::create("token验证失败,非法请求");
+////            throw new ValidateException('token验证失败');
+//            return show(config('status.error'), 'token验证失败，非法请求');
+//        }
         $data['category_path_id'] = $data['category_id'];
         $result = explode(',', $data['category_path_id']);
         $data['category_id'] = end($result);
