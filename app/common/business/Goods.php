@@ -9,11 +9,11 @@
 namespace app\common\business;
 
 
+use AlibabaCloud\Emr\V20160408\ReleaseETLJob;
 use app\common\lib\ListPage;
 use app\common\model\mysql\Goods as GoodsModel;
 use think\Exception;
 use think\facade\Log;
-
 
 
 class Goods extends BusinessBase
@@ -79,7 +79,7 @@ class Goods extends BusinessBase
             //事务提交
             $this->model->commit();
             return true;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             //写入日志
             Log::create('事务回滚，商品新增失败');
             //回滚
@@ -96,17 +96,17 @@ class Goods extends BusinessBase
      * @param $num
      * @return array
      */
-    public function getList($data,$num)
+    public function getList($data, $num)
     {
         //检索
         $likeKeys = [];
-        if(!empty($data)){
+        if (!empty($data)) {
             $likeKeys = array_keys($data);
         }
         try {
-            $list = $this->model->getList($likeKeys,$data,$num);
+            $list = $this->model->getList($likeKeys, $data, $num);
             $res = $list->toArray();
-        }catch (Exception $e){
+        } catch (Exception $e) {
             //数据为空时的返回
             $res = ListPage::listIsEmpty($num);
         }
@@ -128,11 +128,52 @@ class Goods extends BusinessBase
         ];
         $field = "sku_id as id,title,big_image as image";
         try {
-            $res = $this->model->getNormalGoodsCondition($data,$field);
+            $res = $this->model->getNormalGoodsCondition($data, $field);
 
-        }catch (Exception $e){
+        } catch (Exception $e) {
             $res = [];
         }
         return $res->toArray();
+    }
+
+
+    /**
+     * 获取商品分类下的数据
+     * @param $categoryId
+     * @return array
+     */
+    public function getNormalGoodsFindInSetCategoryId($categoryId)
+    {
+        $field = "sku_id as id,title,price,category_id,recommend_image as image";
+        try {
+            $res = $this->model->getNormalGoodsFindInSetCategoryId($categoryId, $field);
+        } catch (Exception $e) {
+            Log::create('分类商品为空');
+            return [];
+        }
+        return $res->toArray();
+
+    }
+
+    /**
+     * 获取商品分类数据
+     * @param $categoryIds
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function categoryGoodsRecommend($categoryIds)
+    {
+        $categoryBusiness = new Category();
+        if (!$categoryIds) {
+            return [];
+        }
+        $res = [];
+        foreach ($categoryIds as $key => $categoryId) {
+            $res[$key]['categorys'] = $categoryBusiness->getFirstAndSecondLevelCategoryById($categoryId);
+            $res[$key]['goods'] = $this->getNormalGoodsFindInSetCategoryId($categoryId);
+        }
+        return $res;
     }
 }

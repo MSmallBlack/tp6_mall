@@ -81,7 +81,31 @@ class Goods extends BaseModel
      */
     public function getImageAttr($value)
     {
-        return request()->domain().$value;
+        return request()->domain() . $value;
+    }
+
+
+    /**
+     * 获取分类商品数据
+     * @param $categoryId
+     * @param bool $field
+     * @param int $limit
+     * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalGoodsFindInSetCategoryId($categoryId, $field = true, $limit = 10)
+    {
+        $order = [
+            'listorder' => 'desc',
+            'id' => 'desc'
+        ];
+        $where = [
+            'status' => config('status.mysql.table_normal')
+        ];
+        return $this->field($field)->whereFindInSet('category_path_id',$categoryId)
+                ->where($where)->order($order)->limit($limit)->select();
     }
 
 }

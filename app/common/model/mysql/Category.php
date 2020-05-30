@@ -15,7 +15,6 @@ class Category extends BaseModel
 {
 
 
-
     /**
      * 通过name获取category
      * @param $name
@@ -74,8 +73,6 @@ class Category extends BaseModel
     }
 
 
-
-
     /**
      * 获取子分类数目
      * @param $data
@@ -113,4 +110,34 @@ class Category extends BaseModel
         ];
         return $this->field($field)->where($where)->order($order)->select();
     }
+
+    /**
+     * 获取id获取一级分类
+     * @param $id
+     * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getFirstLevelCategoryById($id)
+    {
+        $field = 'id as category_id,name,icon';
+        return $this->field($field)->where('id', $id)->select();
+    }
+
+    /**
+     * 根据pid获取二级分类
+     * @param $id
+     * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getSecondLevelCategoryById($id)
+    {
+        $field = 'id as category_id,name';
+        return $this->field($field)->where('pid', $id)->select();
+    }
+
+
 }

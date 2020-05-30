@@ -209,5 +209,29 @@ class Category
         return $res->toArray();
     }
 
+    /**
+     * 获取一级分类下二级分类商品信息
+     * @param $id
+     * @return array|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getFirstAndSecondLevelCategoryById($id)
+    {
+        try {
+            $res = $this->model->getFirstLevelCategoryById($id);
+            if (!$res){
+                return [];
+            }
+            foreach ($res as $key => $value){
+                $res[$key]['list'] = $this->model->getSecondLevelCategoryById($value['category_id']);
+            }
+        }catch (Exception $e){
+            return [];
+        }
+        return $res;
+    }
+
 
 }

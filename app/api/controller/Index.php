@@ -14,9 +14,26 @@ use app\common\lib\Show;
 
 class Index extends ApiBase
 {
+
+
+    /**
+     * 首页推荐大图
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
     public function getRotationChart()
     {
         $res = (new Goods())->getRotationChart();
+        return Show::success($res);
+    }
+
+
+    public function categoryGoodsRecommend()
+    {
+        $categoryIds = [7,8];
+        $res = (new Goods())->categoryGoodsRecommend($categoryIds);
         return Show::success($res);
     }
 }
