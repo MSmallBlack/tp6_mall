@@ -29,7 +29,7 @@ class Specs extends AdminBase
     public function dialog()
     {
         $specs = (new SpecsBusiness())->getNormalSpecs();
-        return View::fetch('',[
+        return View::fetch('', [
             'specs' => json_encode($specs)
         ]);
     }

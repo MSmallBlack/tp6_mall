@@ -5,7 +5,6 @@
  * date   :2020/5/8
  * time   :23:58
  */
-declare(strict_types=1);
 
 namespace app\common\business;
 

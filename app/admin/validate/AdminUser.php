@@ -27,7 +27,7 @@ class AdminUser extends Validate
 
     protected function checkCaptcha($value, $rule, $data = [])
     {
-        if(!captcha_check($value)){
+        if (!captcha_check($value)) {
             return "您输入的验证码不正确";
         }
         return true;

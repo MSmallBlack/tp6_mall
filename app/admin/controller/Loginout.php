@@ -14,7 +14,7 @@ class Loginout extends AdminBase
     public function index()
     {
         //清除session
-        session(config('admin.session_admin'),null);
+        session(config('admin.session_admin'), null);
         return redirect(url('login/index'));
     }
 }

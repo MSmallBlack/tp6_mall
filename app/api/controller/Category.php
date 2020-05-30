@@ -10,6 +10,7 @@ namespace app\api\controller;
 
 use app\common\business\Category as CategoryBusiness;
 use app\common\lib\Arr;
+use app\common\lib\Show;
 use think\Exception;
 use think\facade\Log;
 use think\response\Json;
@@ -33,16 +34,16 @@ class Category extends ApiBase
 
         } catch (Exception $e) {
             //记录日志
-            (new Log)->record('内部异常','error');
+            (new Log)->record('内部异常', 'error');
             //返回空数据
-            return show(config('status.success'), 'ok', '内部异常');
+            return Show::success([], '内部异常');
         }
         if (!$categorys) {
             //记录日志
-            (new Log)->record('分类为空','error');
-            return show(config('status.success'), 'ok', '数据为空');
+            (new Log)->record('分类为空', 'error');
+            return Show::success([], '数据为空');
         }
         $result = Arr::getTree($categorys);
-        return show(config('status.success'), 'ok', $result);
+        return Show::success($result);
     }
 }

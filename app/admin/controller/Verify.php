@@ -10,7 +10,6 @@
 namespace app\admin\controller;
 
 
-
 use think\captcha\facade\Captcha;
 
 /**

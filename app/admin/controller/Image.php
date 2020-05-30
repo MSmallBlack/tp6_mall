@@ -9,6 +9,7 @@
 namespace app\admin\controller;
 
 
+use app\common\lib\Show;
 use think\facade\Filesystem;
 
 
@@ -25,7 +26,7 @@ class Image extends AdminBase
     public function upload()
     {
         if (!$this->request->isPost()) {
-            return show(config('status.error'), '请求不合法');
+            return Show::error([], '请求不合法');
         }
         $file = $this->request->file('file');
         //写入文件
@@ -33,10 +34,10 @@ class Image extends AdminBase
         //写入到public目录下
         $fileName = Filesystem::disk('public')->putFile('image', $file);
         if (!$fileName) {
-            return show(config('status.error'), '上传失败');
+            return Show::error([], '上传失败');
         }
         $imgUrl = '/upload/' . $fileName;
-        return show(config('status.success'), '上传成功', ['image' => $imgUrl]);
+        return Show::success(['image' => $imgUrl], '上传成功');
     }
 
 
@@ -57,7 +58,7 @@ class Image extends AdminBase
         ];
         //失败
         if (!$fileName) {
-            return json($res,200);
+            return json($res, 200);
         }
         //成功
         $imgUrl = '/upload/' . $fileName;
@@ -68,7 +69,7 @@ class Image extends AdminBase
             ]
         ];
 
-        return json($result,200);
+        return json($result, 200);
 
     }
 }

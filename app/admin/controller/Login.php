@@ -10,6 +10,7 @@
 namespace app\admin\controller;
 
 use app\admin\business\AdminUser;
+use app\common\lib\Show;
 use Exception;
 use think\facade\Log;
 use think\facade\View;
@@ -50,18 +51,18 @@ class Login extends AdminBase
         $validate = new \app\admin\validate\AdminUser();
         //验证
         if (!$validate->check($data)) {
-            return show(config('status.error'), $validate->getError());
+            return Show::error([], $validate->getError());
         }
         try {
             $adminUserBusiness = new AdminUser();
             $result = $adminUserBusiness->login($data);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             Log::error($e->getMessage());
-            return show(config('status.error'), $e->getMessage());
+            return Show::error([], $e->getMessage());
         }
-        if($result){
-            return show(config('status.success'), "登录成功");
+        if ($result) {
+            return Show::success([], '登录成功');
         }
-        return show(config('status.error'),$validate->getError());
+        return Show::error([], $validate->getError());
     }
 }

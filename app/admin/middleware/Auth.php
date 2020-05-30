@@ -5,7 +5,6 @@
  * date   :2020/5/7
  * time   :23:27
  */
-declare(strict_types=1);
 
 namespace app\admin\middleware;
 

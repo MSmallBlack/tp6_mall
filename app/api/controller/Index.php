@@ -10,12 +10,13 @@ namespace app\api\controller;
 
 
 use app\common\business\Goods;
+use app\common\lib\Show;
 
 class Index extends ApiBase
 {
     public function getRotationChart()
     {
         $res = (new Goods())->getRotationChart();
-        return show(config('status.success'),'ok',$res);
+        return Show::success($res);
     }
 }

@@ -8,6 +8,7 @@
 
 namespace app\admin\controller;
 
+use app\common\lib\Show;
 use think\Exception;
 use think\exception\ValidateException;
 use think\facade\Log;
@@ -56,7 +57,8 @@ class Goods extends AdminBase
     public function save()
     {
         if (!$this->request->isPost()) {
-            return show(config('status.error'), '参数不合法');
+//            return show(config('status.error'), '参数不合法');
+            return Show::error([],'参数不合法');
         }
         //接受参数
         $data = input('param.');
@@ -76,10 +78,11 @@ class Goods extends AdminBase
         $res = (new GoodsBusiness())->insertData($data);
 
         if (!$res) {
-            return show(config('status.error'), '新增商品失败');
+//            return show(config('status.error'), '新增商品失败');
+            return Show::error([],'新增商品失败');
         }
-        return show(config('status.success'), '新增商品成功');
-
+//        return show(config('status.success'), '新增商品成功');
+        return Show::success([],'新增商品成功');
 
     }
 }

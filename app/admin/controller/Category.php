@@ -10,6 +10,7 @@ namespace app\admin\controller;
 
 
 use app\common\lib\ListPage;
+use app\common\lib\Show;
 use app\common\lib\Status;
 use think\Exception;
 use think\facade\View;
@@ -68,17 +69,17 @@ class Category extends AdminBase
         ];
         $validate = new \app\admin\validate\Category();
         if (!$validate->check($data)) {
-            return show(config('status.error'), $validate->getError());
+            return Show::error([], $validate->getError());
         }
         try {
             $res = (new CategoryBusiness())->add($data);
         } catch (Exception $e) {
-            return show(config('status.error'), $e->getMessage());
+            return Show::error([], $e->getMessage());
         }
         if ($res) {
-            show(config('status.success'), 'ok');
+            return Show::success();
         }
-        return show(config('status.error'), '新增分类失败');
+        return Show::error([], '新增分类失败');
     }
 
 
@@ -92,17 +93,18 @@ class Category extends AdminBase
         $listorder = input('param.listorder', 0, 'intval');
 
         if (!$id) {
-            return show(config('status.error'), '参数错误');
+            return Show::error([], '参数错误');
         }
         try {
             $res = (new CategoryBusiness())->listorder($id, $listorder);
         } catch (Exception $e) {
-            return show(config('status.error'), $e->getMessage());
+            return Show::error([], $e->getMessage());
         }
         if (!$res) {
-            return show(config('status.error'), '排序失败');
+            return Show::error([], '排序失败');
+
         } else {
-            return show(config('status.success'), '排序成功');
+            return Show::success([], '排序成功');
         }
     }
 
@@ -117,18 +119,18 @@ class Category extends AdminBase
         $id = input('param.id', 0, 'intval');
 
         if (!$id || !in_array($status, Status::getTableStatus())) {
-            return show(config('status.error'), '参数错误');
+            return Show::error([], '参数错误');
         }
 
         try {
             $res = (new CategoryBusiness())->status($id, $status);
         } catch (Exception $e) {
-            return show(config('status.error'), $e->getMessage());
+            return Show::error([], $e->getMessage());
         }
         if ($res) {
-            return show(config('status.success'), '状态更新成功');
+            return Show::success([], '状态更新成功');
         } else {
-            return show(config('status.error'), '状态更新失败');
+            return Show::error([], '状态更新失败');
         }
     }
 
@@ -144,7 +146,7 @@ class Category extends AdminBase
     {
         //获取一级分类
         $categorys = (new CategoryBusiness())->getNormalByPid();
-        return View::fetch('',[
+        return View::fetch('', [
             'categorys' => json_encode($categorys)
         ]);
     }
@@ -152,9 +154,9 @@ class Category extends AdminBase
 
     public function getByPid()
     {
-        $pid = input('param.pid',0,'intval');
+        $pid = input('param.pid', 0, 'intval');
         $categorys = (new CategoryBusiness())->getNormalByPid($pid);
-        return show(config('status.success'),'ok',$categorys);
+        return show(config('status.success'), 'ok', $categorys);
     }
 
 

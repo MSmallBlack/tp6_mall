@@ -9,6 +9,7 @@
 namespace app\admin\controller;
 
 use app\common\business\SpecsValue as SpecsValueBusiness;
+use app\common\lib\Show;
 
 /**
  * 规格属性
@@ -29,9 +30,11 @@ class SpecsValue extends AdminBase
         ];
         $id = (new SpecsValueBusiness())->add($data);
         if (!$id) {
-            return show(config('status.error'), '新增失败');
+//            return show(config('status.error'), '新增失败');
+            return Show::error([], '新增失败');
         }
-        return show(config('status.success', 'ok', ['id' => $id]));
+//        return show(config('status.success', 'ok', ['id' => $id]));
+        return Show::success(['id' => $id]);
     }
 
     /**
@@ -42,9 +45,11 @@ class SpecsValue extends AdminBase
     {
         $specsId = input('param.specs_id', 0, 'intval');
         if (!$specsId) {
-            return show(config('status.success'), '没有数据');
+//            return show(config('status.success'), '没有数据');
+            return Show::error([], '没有数据');
         }
         $res = (new SpecsValueBusiness())->getBySpecsId($specsId);
-        return show(config('status.success'), 'ok', $res);
+//        return show(config('status.success'), 'ok', $res);
+        return Show::success($res);
     }
 }

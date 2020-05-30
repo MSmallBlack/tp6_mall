@@ -10,6 +10,7 @@ namespace app\api\controller;
 
 use app\common\business\User as userBusiness;
 use app\api\validate\User as userValidate;
+use app\common\lib\Show;
 use think\Exception;
 
 class User extends AuthBase
@@ -22,7 +23,7 @@ class User extends AuthBase
             'username' => $normalUser['username'],
             'sex' => $normalUser['sex']
         ];
-        return show(config('status.success'), 'ok', $result);
+        return Show::success($result);
 
     }
 
@@ -41,16 +42,16 @@ class User extends AuthBase
         ];
         $validate = (new userValidate())->scene('update_user');
         if (!$validate->check($data)) {
-            return show(config('status.error'), $validate->getError());
+            return Show::error([], $validate->getError());
         }
         try {
             $user = (new UserBusiness())->updateUser($this->userId, $data);
         } catch (Exception $e) {
-            return show(config('status.error'), $e->getMessage());
+            return Show::error([], $e->getMessage());
         }
         if (!$user) {
-            return show(config('status.error'), '更新失败');
+            return Show::error([], '更新失败');
         }
-        return show(1, 'ok');
+        return Show::success();
     }
 }

@@ -5,7 +5,6 @@
  * date   :2020/5/8
  * time   :0:43
  */
-declare(strict_types=1);
 
 namespace app\admin\business;
 
@@ -35,7 +34,7 @@ class AdminUser
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function login(array $data): bool
+    public function login(array $data)
     {
         $adminUser = $this->adminUserObj->getAdminUserByUsername($data['username']);
         if (empty($adminUser) || $adminUser->status != config('status.mysql.table_normal')) {

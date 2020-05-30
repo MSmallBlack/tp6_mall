@@ -5,7 +5,6 @@
  * date   :2020/5/8
  * time   :23:33
  */
-declare(strict_types=1);
 
 namespace app\common\lib\sms;
 
@@ -18,12 +17,12 @@ class AliSms implements SmsBase
 {
     /**
      * 阿里云短信发送
-     * @param string $phone
-     * @param int $code
+     * @param  $phone
+     * @param  $code
      * @return bool
      * @throws ClientException
      */
-    public static function sendCode(string $phone, int $code): bool
+    public static function sendCode($phone, $code)
     {
         if (empty($phone) || empty($code)) {
             return false;
@@ -53,18 +52,18 @@ class AliSms implements SmsBase
                 ])
                 ->request();
             //记录到日志
-            Log::info('aliyun-sendCode-result'.$phone.'|'.json_encode($result->toArray()));
+            Log::info('aliyun-sendCode-result' . $phone . '|' . json_encode($result->toArray()));
 //            print_r($result->toArray());
         } catch (ClientException $e) {
-            Log::error('aliyun-sendCode-ClientException'.$e->getMessage());
+            Log::error('aliyun-sendCode-ClientException' . $e->getMessage());
             return false;
 //            echo $e->getErrorMessage() . PHP_EOL;
         } catch (ServerException $e) {
-            Log::error('aliyun-sendCode-ServerException'.$e->getMessage());
+            Log::error('aliyun-sendCode-ServerException' . $e->getMessage());
             return false;
 //            echo $e->getErrorMessage() . PHP_EOL;
         }
-        if (isset($result['Code']) && $result['Code'] == 'OK'){
+        if (isset($result['Code']) && $result['Code'] == 'OK') {
             return true;
         }
         return false;
