@@ -104,8 +104,30 @@ class Goods extends BaseModel
         $where = [
             'status' => config('status.mysql.table_normal')
         ];
-        return $this->field($field)->whereFindInSet('category_path_id',$categoryId)
-                ->where($where)->order($order)->limit($limit)->select();
+        return $this->field($field)->whereFindInSet('category_path_id', $categoryId)
+            ->where($where)->order($order)->limit($limit)->select();
+    }
+
+
+    /**
+     * 根据商品分类获取数据
+     * @param $data
+     * @param int $pageSize
+     * @param bool $field
+     * @param array $order
+     * @return \think\Paginator
+     * @throws \think\db\exception\DbException
+     */
+    public function getNormalLists($data, $pageSize = 10, $field = true, $order)
+    {
+        $where = [
+            'status' => config('status.mysql.table_normal')
+        ];
+        $res = $this;
+        if (isset($data['category_path_id'])) {
+            $res = $this->whereFindInSet('category_path_id', $data['category_path_id']);
+        }
+        return $res->field($field)->where($where)->order($order)->paginate($pageSize);
     }
 
 }

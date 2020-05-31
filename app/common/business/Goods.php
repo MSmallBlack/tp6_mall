@@ -176,4 +176,33 @@ class Goods extends BusinessBase
         }
         return $res;
     }
+
+    /**
+     *  获取商品分类数据
+     * @param $data
+     * @param int $pageSize
+     * @param array $order
+     * @return array
+     * @throws \think\db\exception\DbException
+     */
+    public function getNormalLists($data, $pageSize = 10, $order)
+    {
+        try {
+            $field = 'sku_id as id,title,recommend_image as image,price';
+            $list = $this->model->getNormalLists($data, $pageSize, $field, $order);
+            $res = $list->toArray();
+            $result = [
+                'total_page_num' => $res['last_page'] ?? 0,
+                'count' => $res['total'] ?? 0,
+                'page' => $res['current_page'] ?? 0,
+                'page_size' => $pageSize,
+                'list' => $res['data'] ?? []
+            ];
+
+        } catch (Exception $e) {
+            Log::create('');
+            return [];
+        }
+        return $result;
+    }
 }

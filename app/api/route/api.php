@@ -16,3 +16,9 @@ Route::rule('login','Login/index','POST');
 
 //资源路由
 Route::resource('user','User');
+
+//商品列表
+Route::rule('lists','mall.lists/index');
+
+
+Route::rule('subcategory/:id','category/sub');
