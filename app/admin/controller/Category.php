@@ -76,10 +76,10 @@ class Category extends AdminBase
         } catch (Exception $e) {
             return Show::error([], $e->getMessage());
         }
-        if ($res) {
-            return Show::success();
+        if (!$res) {
+            return Show::error([], '新增分类失败');
         }
-        return Show::error([], '新增分类失败');
+        return Show::success([], '新增成功');
     }
 
 

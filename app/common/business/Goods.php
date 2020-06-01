@@ -205,4 +205,7 @@ class Goods extends BusinessBase
         }
         return $result;
     }
+
+
+
 }

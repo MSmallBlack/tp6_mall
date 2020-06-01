@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm
  * author :gogochen
- * date   :2020/5/24
- * time   :0:47
+ * date   :2020/6/2
+ * time   :1:45
  */
 
 namespace app\api\controller;
@@ -45,5 +45,23 @@ class Category extends ApiBase
         }
         $result = Arr::getTree($categorys);
         return Show::success($result);
+    }
+
+    /**
+     * 点击分类搜索对应商品
+     * @param $id
+     * @return Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function search($id)
+    {
+
+        $res = (new CategoryBusiness())->getEveryLevelCategory($id);
+        if (empty($res)) {
+            return Show::error([], 'error');
+        }
+        return Show::success($res);
     }
 }

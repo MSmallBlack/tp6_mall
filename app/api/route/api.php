@@ -21,4 +21,5 @@ Route::resource('user','User');
 Route::rule('lists','mall.lists/index');
 
 
-Route::rule('subcategory/:id','category/sub');
+//点击分类获取对应商品
+Route::rule('category/search/:id','category/search');

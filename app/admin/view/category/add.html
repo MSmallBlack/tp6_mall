@@ -97,6 +97,7 @@
                 data: data,
                 url: '/admin/category/save',
                 success(res) {
+                    console.log(res)
                     //todo
                     if (res.status == 1) {
                         layer.msg("新增成功",function () {

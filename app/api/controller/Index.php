@@ -38,7 +38,7 @@ class Index extends ApiBase
      */
     public function categoryGoodsRecommend()
     {
-        $categoryIds = [7,8];
+        $categoryIds = [7,8,36];
         $res = (new Goods())->categoryGoodsRecommend($categoryIds);
         return Show::success($res);
     }

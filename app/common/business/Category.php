@@ -10,6 +10,7 @@ namespace app\common\business;
 
 use app\common\model\mysql\Category as CategoryModel;
 use think\Exception;
+use app\common\model\mysql\Goods;
 
 /**
  * 分类管理
@@ -37,13 +38,14 @@ class Category
             throw new Exception("分类名已存在，请重新设置分类名");
         }
         try {
-            $this->model->save($data);
+            $res = $this->model->save($data);
         } catch (Exception $e) {
             throw new Exception("数据库内部异常");
         }
 
         //return主键id
-        return $this->model->getLastInsID();
+//        return $this->model->getLastInsID();
+        return $res;
     }
 
     /**
@@ -231,6 +233,44 @@ class Category
             return [];
         }
         return $res;
+    }
+
+
+    /**
+     * 获取分类数据
+     * @param $id
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getEveryLevelCategory($id)
+    {
+        try {
+            $res = (new Goods())->getCategoryByCategoryPathId($id);
+            if(empty($res)){
+                throw new Exception('数据为空');
+            }
+            $firstFocusId = $this->model->getCategoryById($id);
+            $categoryArray = explode(',',$res['category_path_id']);
+            $firstCategory = $this->model->getCategoryById($categoryArray[0]);
+            $secondCategory = $this->model->getCategoryByPid($firstCategory['id']);
+            $thirdCategory = $this->model->getCategoryByPid(array_column($secondCategory,'id'));
+            $data = [
+                'name' => $firstCategory['name'],
+                'focus_ids' => [
+                    $firstFocusId['pid'],
+                    intval($id)
+                ],
+                'list' => [
+                    $secondCategory,
+                    $thirdCategory
+                ]
+            ];
+        }catch (Exception $e){
+            return [];
+        }
+        return $data;
     }
 
 

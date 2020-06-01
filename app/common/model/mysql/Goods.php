@@ -130,4 +130,21 @@ class Goods extends BaseModel
         return $res->field($field)->where($where)->order($order)->paginate($pageSize);
     }
 
+
+    /**
+     * 获取分类id
+     * @param $categoryPathId
+     * @return array|\think\Model|null
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getCategoryByCategoryPathId($categoryPathId)
+    {
+        $where = [
+            'status' => config('status.mysql.table_normal')
+        ];
+        return $this->where($where)->whereFindInSet('category_path_id', $categoryPathId)->find();
+    }
+
 }

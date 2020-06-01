@@ -140,4 +140,47 @@ class Category extends BaseModel
     }
 
 
+    /**
+     * 获取分类数据
+     * @param $id
+     * @return array|Model|null
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getCategoryById($id)
+    {
+        $field = "id,name,pid";
+        $where = [
+            'id' => $id,
+            'status' => config('status.mysql.table_normal')
+        ];
+        return $this->field($field)->where($where)->find();
+    }
+
+    /**
+     * @param $pid
+     * @return array|Model|null
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getCategoryByPid($pid)
+    {
+        $field = "id,name";
+        if(is_array($pid)){
+            $where[] = ['pid','in',$pid];
+            $where[] = ['status','=',config('status.mysql.table_normal')];
+        }else{
+            $where = [
+                'pid' => $pid,
+                'status' => config('status.mysql.table_normal')
+            ];
+        }
+
+        $data = $this->field($field)->where($where)->select();
+        return $data->toArray();
+    }
+
+
 }
