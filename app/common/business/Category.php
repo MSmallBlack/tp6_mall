@@ -273,5 +273,23 @@ class Category
         return $data;
     }
 
+    /**
+     * 获取下一级分类商品
+     * @param $pid
+     * @return array|\think\Model|null
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getCategoryByPid($pid)
+    {
+        try {
+            $res = $this->model->getCategoryByPid($pid);
+        }catch (Exception $e){
+            return [];
+        }
+        return $res;
+    }
+
 
 }

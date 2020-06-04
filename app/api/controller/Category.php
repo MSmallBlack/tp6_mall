@@ -64,4 +64,22 @@ class Category extends ApiBase
         }
         return Show::success($res);
     }
+
+
+    /**
+     * 下一级分类
+     * @param $id
+     * @return Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function sub($id)
+    {
+        $res = (new CategoryBusiness())->getCategoryByPid($id);
+        if (empty($res)) {
+            return Show::error([], 'error');
+        }
+        return Show::success($res);
+    }
 }
