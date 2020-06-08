@@ -31,4 +31,21 @@ class SpecsValue extends BaseModel
         ];
         return $this->field($field)->where($where)->select();
     }
+
+
+
+    /**
+     * 获取规格属性
+     * @param $ids
+     * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalInIds($ids)
+    {
+       return $this->whereIn('id',$ids)
+                ->where('status',config('status.mysql.table_normal'))
+                ->select();
+    }
 }

@@ -56,4 +56,53 @@ class GoodsSku extends BusinessBase
         return true;
     }
 
+    /**
+     * 获取数据
+     * @param $id
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalSkuAndGoods($id)
+    {
+        try {
+            $res = $this->model->with('goods')->find($id);
+        } catch (Exception $e) {
+            return [];
+        }
+
+        if (!$res) {
+            return [];
+        }
+        $res = $res->toArray();
+        if ($res['status'] !== config('status.mysql.table_normal')) {
+            return [];
+        }
+        return $res;
+    }
+
+    /**
+     * 通过goodsId获取sku数据
+     * @param $goodsId
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getSkusByGoodsId($goodsId)
+    {
+        if(!$goodsId){
+            return [];
+        }
+        try {
+            //获取sku数据
+            $sku = $this->model->getNormalByGoodsId($goodsId);
+        }catch (Exception $e){
+            return [];
+        }
+        return $sku->toArray();
+
+    }
+
 }

@@ -13,6 +13,7 @@ use AlibabaCloud\Emr\V20160408\ReleaseETLJob;
 use app\common\lib\ListPage;
 use app\common\model\mysql\Goods as GoodsModel;
 use think\Exception;
+use think\facade\Cache;
 use think\facade\Log;
 
 
@@ -206,6 +207,70 @@ class Goods extends BusinessBase
         return $result;
     }
 
+
+    /**
+     * 获取商品详情
+     * @param $skuId
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getGoodsDetailBySkuId($skuId)
+    {
+        //sku_id  sku表=>goods_id goods表  =>  sku  数据
+        $goodsSku = (new GoodsSku())->getNormalSkuAndGoods($skuId);
+        if (!$goodsSku) {
+            return [];
+        }
+        if (empty($goodsSku['goods'])) {
+            //goods数据为空
+            Log::error('sku为空');
+            return [];
+        }
+        $goods = $goodsSku['goods'];
+        $skus = (new GoodsSku())->getSkusByGoodsId($goods['id']);
+        if (!$skus) {
+            return [];
+        }
+        $flagValue = '';
+        foreach ($skus as $value){
+            if($value['id'] == $skuId){
+                $flagValue = $value['specs_value_ids'];
+            }
+        }
+        $gids = array_column($skus, 'id', 'specs_value_ids');
+        if ($goods['goods_specs_type'] == 1){  //单规格
+            $sku = [];
+        }else{   //多规格
+            //获取sku
+            $sku = (new SpecsValue())->dealGoodsSkus($gids,$flagValue);
+        }
+
+
+        $result = [
+            'title' => $goods['title'],
+            'price' => $goodsSku['price'],
+            'cost_price' => $goodsSku['cost_price'],
+            'stock' => $goodsSku['stock'],
+            'gids' => $gids,
+            'image' => $goods['carousel_image'],
+            'sku' => $sku,
+            'detail' => [
+                'd1' => [
+                    '商品编码' => $goodsSku['id'],
+                    '上架时间' => $goods['create_time']
+                ],
+                'd2' => preg_replace('/(<img.+?src=")(.*?)/',
+                    '$1' . request()->domain() . '$2',
+                    $goods['description'])
+            ]
+        ];
+        //详情页pv统计,redis计数器统计
+        Cache::inc('mall_detail_pv_'.$goods['id']);
+
+        return $result;
+    }
 
 
 }

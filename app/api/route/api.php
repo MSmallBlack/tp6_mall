@@ -20,8 +20,11 @@ Route::resource('user','User');
 //商品列表
 Route::rule('lists','mall.lists/index');
 
+//商品详情
+Route::rule('detail/:id','mall.detail/index');
+
 //点击分类获取对应商品
 Route::rule('category/search/:id','category/search');
 
-//获取下一级分类
-Route::rule('subsearch/:id','category/sub');
+//获取下一级商品分类
+Route::rule('subcategory/:id','category/sub');

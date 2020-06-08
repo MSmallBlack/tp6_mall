@@ -84,6 +84,17 @@ class Goods extends BaseModel
         return request()->domain() . $value;
     }
 
+    public function getCarouselImageAttr($value)
+    {
+        if (!empty($value)) {
+            $value = explode(',', $value);
+            $res = array_map(function ($v) {
+                return request()->domain() . $v;
+            }, $value);
+        }
+        return $res;
+    }
+
 
     /**
      * 获取分类商品数据
