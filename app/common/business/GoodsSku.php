@@ -92,17 +92,29 @@ class GoodsSku extends BusinessBase
      */
     public function getSkusByGoodsId($goodsId)
     {
-        if(!$goodsId){
+        if (!$goodsId) {
             return [];
         }
         try {
             //获取sku数据
             $sku = $this->model->getNormalByGoodsId($goodsId);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return [];
         }
         return $sku->toArray();
 
+    }
+
+
+    public function getNormalInIds($ids)
+    {
+        try {
+            $result = $this->model->getNormalInIds($ids);
+
+        }catch (Exception $e){
+            return [];
+        }
+        return $result->toArray();
     }
 
 }

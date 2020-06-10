@@ -11,6 +11,7 @@ namespace app\common\business;
 
 use app\common\model\mysql\SpecsValue as SpecsValueModel;
 use think\Exception;
+use think\facade\Log;
 
 
 /**
@@ -100,5 +101,31 @@ class SpecsValue extends BusinessBase
         }
         return $res;
 
+    }
+
+
+    public function dealSpecsValue($skuIdSpecsValueIds)
+    {
+        $ids = array_values($skuIdSpecsValueIds);
+        $ids = implode(',', $ids);
+        $ids = array_unique(explode(',', $ids));
+        $res = $this->getNormalInIds($ids);
+
+
+        if (!$res) {
+            return [];
+        }
+        $result = [];
+        foreach ($skuIdSpecsValueIds as $skuId => $specs) {
+            $specs = explode(',', $specs);
+            $skuStr = [];
+            foreach ($specs as $spec) {
+                $skuStr[] = $res[$spec]['specs_name'] . ":" . $res[$spec]['name'];
+            }
+            //单引号 会报错，需注意
+            $result[$skuId] = implode("  ", $skuStr);
+
+        }
+        return $result;
     }
 }

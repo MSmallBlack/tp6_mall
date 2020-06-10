@@ -9,6 +9,8 @@
 namespace app\common\lib;
 
 
+use AlibabaCloud\Emr\V20160408\ReleaseETLJob;
+
 class Arr
 {
     /**
@@ -56,5 +58,20 @@ class Arr
             }
         }
         return $data;
+    }
+
+
+    /**
+     * 数组排序
+     * @param $array
+     * @param $key
+     * @param int $sort
+     * @return mixed
+     */
+    public static function arraySortByKey($array,$key,$sort = SORT_DESC)
+    {
+        $arrayColumn = array_column($array, $key);
+        array_multisort($arrayColumn,$sort,$array);
+        return $array;
     }
 }

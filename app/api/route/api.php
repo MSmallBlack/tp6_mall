@@ -28,3 +28,18 @@ Route::rule('category/search/:id','category/search');
 
 //获取下一级商品分类
 Route::rule('subcategory/:id','category/sub');
+
+//购物车添加
+Route::rule('cart/add','cart/add');
+
+//购物车列表
+Route::rule('mall.init','mall.init/index');
+
+//删除购物车
+Route::rule('cart/delete','cart/delete');
+
+//更新购物车
+Route::rule('cart/update','cart/update');
+
+//获取购物车商品总数
+Route::rule('cart/update','cart/update');
